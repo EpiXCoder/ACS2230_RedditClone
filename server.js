@@ -11,6 +11,7 @@ app.use(express.static('public'));
 // Set db
 require('./data/reddit-db.js');
 
+
 // Middleware
 
 const hbs = handlebars.create({
@@ -26,6 +27,7 @@ app.use(express.urlencoded({ extended: false }));
 
 // Require controllers
 require('./controllers/posts')(app);
+require('./controllers/comments.js')(app);
 // require('./controllers/users')(app);
 
 // Routes

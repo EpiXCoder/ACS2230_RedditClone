@@ -30,21 +30,22 @@ module.exports = (app) => {
   });
 
   // SHOW post using :id
-  app.get('/posts/:id', async (req, res) => {
-    try {
-      const post = await Post.findById(req.params.id).lean()
-      return res.render('posts-show', { post });
-    } catch {
-      console.log(err.message);
-    }   
-  });
+    app.get('/posts/:id', async (req, res) => {
+        try {
+        const post = await Post.findById(req.params.id).lean().populate('comments')
+        return res.render('posts-show', { post });
+        } catch {
+        console.log(err.message);
+        }   
+    });
 
   // SUBREDDIT
-    app.get('/n/:subreddit', (req, res) => {
-        Post.find({ subreddit: req.params.subreddit }).lean()
-        .then((posts) => res.render('posts-index', { posts }))
-        .catch((err) => {
-            console.log(err);
-        });
+    app.get('/n/:subreddit', async (req, res) => {
+        try {
+            let posts = await Post.find({ subreddits: req.params.subreddit }).lean();
+            return res.render('posts-index', { posts });
+          } catch(err) {
+            console.log(err.message);
+          }
     });
 };
