@@ -1,6 +1,7 @@
 // Require stuff here
 require('dotenv').config();
 const cookieParser = require('cookie-parser');
+const checkAuth = require('./middleware/checkAuth');
 
 const express = require('express');
 // import express from 'express';
@@ -27,6 +28,7 @@ app.set('view engine', 'handlebars');
 app.set('views', './views');
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(checkAuth);
 
 // Require controllers
 require('./controllers/posts')(app);

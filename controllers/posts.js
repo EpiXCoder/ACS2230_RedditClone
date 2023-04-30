@@ -5,9 +5,10 @@ module.exports = (app) => {
 
   // INDEX
   app.get('/', async (req, res) => {
+    const currentUser = req.user;
     try {
       const posts = await Post.find({}).lean();
-      return res.render('posts-index', { posts });
+      return res.render('posts-index', { posts, currentUser });
     } catch (err) {
       console.log(err.message);
     }
@@ -15,19 +16,25 @@ module.exports = (app) => {
 
   // NEW
   app.get('/posts/new', (req, res) => {
-    res.render('posts-new');
+    const currentUser = req.user;
+    res.render('posts-new', { currentUser });
   })
 
   // CREATE
-  app.post('/posts/new', (req, res) => {
+  app.post('/posts/new', async (req, res) => {
     // INSTANTIATE INSTANCE OF POST MODEL
-    const post = new Post(req.body);
-    // SAVE INSTANCE OF POST MODEL TO DB AND REDIRECT TO THE ROOT
-    post.save()
-      .then(() => {
-        res.redirect('/')
-      })
-      .catch(err => console.log(err))
+    if (req.user) {
+      try {
+        const currentUser = req.user;
+        const post = new Post(req.body);
+        await post.save();
+        return res.redirect('/');
+      } catch(err) {
+        console.log(err.message);
+      }
+    } else {
+      return res.status(401); // UNAUTHORIZED
+    }
   });
 
   // SHOW post using :id
