@@ -11,7 +11,10 @@
       </div>
     </form>
     {{#each post.comments}}
-        <p>{{this.content}}</p>
+      <div class="d-flex w-100 justify-content-between">
+        <p>{{ this.content }}</p>
+        <p class="text-right">{{ this.author.username }}</p>
+      </div>
     {{/each}}
   </div>
 </div>
