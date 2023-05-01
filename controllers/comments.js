@@ -1,6 +1,6 @@
 const Post = require('../models/post');
 const Comment = require('../models/comment');
-const User = require('../models/user');
+
 
 module.exports = (app) => {
     // CREATE Comment
@@ -18,7 +18,9 @@ module.exports = (app) => {
         // Add comment to post comments array and save
         post.comments.unshift(comment);
         await post.save();
-        const comments = await Comment.find().populate('author', 'username');
+        // return Promise.all([
+        //     post.save(),
+        //   ]);
 
         // Redirect
         res.redirect(`/posts/${req.params.postId}`);
