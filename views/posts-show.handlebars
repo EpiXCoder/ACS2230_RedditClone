@@ -11,10 +11,7 @@
       </div>
     </form>
     {{#each post.comments}}
-      <div class="d-flex w-100 justify-content-between">
-        <p>{{ this.content }}</p>
-        <p class="text-right">{{ this.author.username }}</p>
-      </div>
+      {{> comment comment=this postId=../post._id}}
     {{/each}}
   </div>
 </div>
