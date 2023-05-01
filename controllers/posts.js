@@ -1,4 +1,5 @@
 const Post = require('../models/post');
+const User = require('../models/user');
 const Comment = require('../models/comment');
 
 module.exports = (app) => {
@@ -7,7 +8,7 @@ module.exports = (app) => {
   app.get('/', async (req, res) => {
     const currentUser = req.user;
     try {
-      const posts = await Post.find({}).lean();
+      const posts = await Post.find({}).lean().populate('author');
       return res.render('posts-index', { posts, currentUser });
     } catch (err) {
       console.log(err.message);
@@ -25,9 +26,14 @@ module.exports = (app) => {
     // INSTANTIATE INSTANCE OF POST MODEL
     if (req.user) {
       try {
+        const userId = req.user._id;
         const currentUser = req.user;
         const post = new Post(req.body);
+        post.author = userId;
         await post.save();
+        const user = await User.findById(userId);
+        user.posts.unshift(post);
+        await user.save();
         return res.redirect('/');
       } catch(err) {
         console.log(err.message);
@@ -40,8 +46,9 @@ module.exports = (app) => {
   // SHOW post using :id
     app.get('/posts/:id', async (req, res) => {
         try {
-        const post = await Post.findById(req.params.id).lean().populate('comments')
-        return res.render('posts-show', { post });
+        const currentUser = req.user;
+        const post = await Post.findById(req.params.id).lean().populate('comments').populate('author')
+        return res.render('posts-show', { post, currentUser });
         } catch {
         console.log(err.message);
         }   
@@ -50,10 +57,11 @@ module.exports = (app) => {
   // SUBREDDIT
     app.get('/n/:subreddit', async (req, res) => {
         try {
-            let posts = await Post.find({ subreddits: req.params.subreddit }).lean();
-            return res.render('posts-index', { posts });
-          } catch(err) {
-            console.log(err.message);
-          }
+          const currentUser = req.user;
+          let posts = await Post.find({ subreddits: req.params.subreddit }).lean().populate('author');
+          return res.render('posts-index', { posts, currentUser });
+        } catch(err) {
+          console.log(err.message);
+        }
     });
 };
