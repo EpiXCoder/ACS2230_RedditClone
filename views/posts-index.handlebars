@@ -13,6 +13,13 @@
                     <pre></pre>
                     <small><a href="/n/{{this.subreddit}}" class="text-decoration-none">{{this.subreddit}}</a></small>
                 </div>
+                <form class="vote-up" data-id="{{this._id}}">
+                    <button type="submit">⬆️</button>
+                </form>
+                {{!-- #{{this.voteScore}} --}}
+                <form class="vote-down" data-id="{{this._id}}">
+                    <button type="submit">⬇️</button>
+                </form>
             </li>
         {{/each}}
     </ul>

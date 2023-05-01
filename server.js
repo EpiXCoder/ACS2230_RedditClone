@@ -28,6 +28,7 @@ app.set('view engine', 'handlebars');
 app.set('views', './views');
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(express.static('public'));
 app.use(checkAuth);
 
 // Require controllers
@@ -49,7 +50,7 @@ app.get('/posts/new', (req, res) => {
 
 app.get('/users/new', (req, res) => {
   console.log("making a user!")
-  res.render('users-new');
+  res.render('users-new'); 
 });
 
 app.listen(3000, () => {
