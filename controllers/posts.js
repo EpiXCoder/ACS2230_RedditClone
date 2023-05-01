@@ -49,7 +49,7 @@ module.exports = (app) => {
         const currentUser = req.user;
         const post = await Post.findById(req.params.id).lean().populate({ path:'comments', populate: { path: 'author' } }).populate('author')
         return res.render('posts-show', { post, currentUser });
-        } catch {
+        } catch(err) {
         console.log(err.message);
         }   
     });

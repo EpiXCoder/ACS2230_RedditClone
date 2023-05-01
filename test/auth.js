@@ -1,7 +1,7 @@
 // test/auth.js
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const { describe, it } = require('mocha');
+const { describe, it, after } = require('mocha');
 const app = require('../server');
 
 const should = chai.should();
